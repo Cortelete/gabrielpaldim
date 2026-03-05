@@ -13,12 +13,22 @@ import CreditsModal from "./components/modals/CreditsModal";
 export default function App() {
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [logoRotation, setLogoRotation] = useState(0);
+  const [logoScale, setLogoScale] = useState(1);
 
   const handleLogoClick = () => {
     setLogoRotation((prev) => prev + 360 * 5); // Spin 5 times
+    setLogoScale(1.2); // Zoom in
+    
+    // Open modal during the spin
+    setTimeout(() => {
+      setActiveModal("bio");
+    }, 800);
   };
 
-  const closeModal = () => setActiveModal(null);
+  const closeModal = () => {
+    setActiveModal(null);
+    setLogoScale(1); // Reset scale
+  };
 
   const links = [
     {
@@ -72,9 +82,9 @@ export default function App() {
         {/* Profile Section */}
         <div className="flex flex-col items-center mb-6 text-center">
           <motion.div
-            className="relative w-40 h-40 mb-3 cursor-pointer perspective-1000"
+            className="relative w-48 h-48 mb-3 cursor-pointer perspective-1000"
             onClick={handleLogoClick}
-            animate={{ rotateY: logoRotation }}
+            animate={{ rotateY: logoRotation, scale: logoScale }}
             transition={{ duration: 2, ease: "circOut" }}
           >
             <div className="w-full h-full flex items-center justify-center">
