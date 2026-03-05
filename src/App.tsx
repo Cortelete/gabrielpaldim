@@ -101,7 +101,7 @@ export default function App() {
         {/* Profile Section */}
         <div className="flex flex-col items-center mb-6 text-center">
           <motion.div
-            className="relative w-48 h-48 mb-3 cursor-pointer perspective-1000"
+            className="relative w-48 h-48 mb-3 cursor-pointer perspective-1000 will-change-transform"
             onClick={handleLogoClick}
             animate={{ rotateY: logoRotation, scale: logoScale }}
             transition={{ duration: 2, ease: "circOut" }}
