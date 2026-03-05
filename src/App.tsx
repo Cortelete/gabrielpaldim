@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { User, Instagram, Globe, MessageCircle, MapPin, Star } from "lucide-react";
 
@@ -14,6 +14,25 @@ export default function App() {
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [logoRotation, setLogoRotation] = useState(0);
   const [logoScale, setLogoScale] = useState(1);
+
+  // Favicon alternation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const link = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
+      if (link) {
+        link.href = link.href.includes("favicon.png") ? "/favicon2.png" : "/favicon.png";
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Automatic logo rotation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLogoRotation((prev) => prev + 360);
+    }, 7000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogoClick = () => {
     setLogoRotation((prev) => prev + 360 * 5); // Spin 5 times
@@ -86,14 +105,34 @@ export default function App() {
             onClick={handleLogoClick}
             animate={{ rotateY: logoRotation, scale: logoScale }}
             transition={{ duration: 2, ease: "circOut" }}
+            style={{ transformStyle: "preserve-3d" }}
           >
-            <div className="w-full h-full flex items-center justify-center">
+            {/* Front Side */}
+            <div 
+              className="absolute inset-0 w-full h-full flex items-center justify-center backface-hidden"
+              style={{ backfaceVisibility: "hidden" }}
+            >
               <img
                 src="/logo.png"
-                alt="Gabriel Paldim Logo"
+                alt="Gabriel Paldim Logo Front"
                 className="w-full h-full object-contain"
                 onError={(e) => {
                   e.currentTarget.src = "https://placehold.co/400x400/transparent/d4af37?text=GP";
+                }}
+              />
+            </div>
+
+            {/* Back Side */}
+            <div 
+              className="absolute inset-0 w-full h-full flex items-center justify-center backface-hidden"
+              style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+            >
+              <img
+                src="/logo2.png"
+                alt="Gabriel Paldim Logo Back"
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  e.currentTarget.src = "https://placehold.co/400x400/transparent/d4af37?text=GP2";
                 }}
               />
             </div>
